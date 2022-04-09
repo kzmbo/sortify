@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 10),
                 TextButton(
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(10),
+                    //minimumSize: MaterialStateProperty.all(10),
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1DB954)),
                     foregroundColor: MaterialStateProperty.all<Color>(Color(0xffeeeeee)),
                   ),
