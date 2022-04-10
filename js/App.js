@@ -1,15 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  onPageLoad();
-  return (
-  <button onClick={() => requestAuth()}> try to authorize </button>
-  );
-}
-
 const get_playlist_items = "https://api.spotify.com/v1/playlists/";
-const get_playlists_uri = "https://api.spotify.com/v1/me/playlists"
+const get_playlists_uri = "https://api.spotify.com/v1/me/playlists";
 const redirect_uri = "http://localhost:3000";
 const client_id = "8405c732c9e44daf81d6a21cb5a0e8fc";
 const client_secret = "c33d9877c3a04803b131247f31644d23";
@@ -17,19 +7,12 @@ const TOKEN = "https://accounts.spotify.com/api/token";
 
 var access_token;
 var refresh_token;
-
-//handles redirection back to homepage with spotify auth code
-function onPageLoad(){
-  if (window.location.search.length > 0){
-    handleRedirect();
-  }
-}
-
 function handleRedirect(){
   let code = getCode();
   fetchAccessToken(code);
   window.history.pushState("", "", redirect_uri);
 }
+
 //parses spotify auth code
 function getCode(){
   let code = null;
@@ -62,6 +45,7 @@ function refreshAccessToken(){
   body += "&client_id=" + client_id;
   callAuthorizationApi(body);
 }
+
 //calls for authorization
 function callAuthorizationApi(body){
 
@@ -85,14 +69,17 @@ function handleAuthorizationResponse(){
       refresh_token = data.refresh_token;
       localStorage.setItem("refresh_token", refresh_token);
     }
-    onPageLoad();
+  //send back to homepage with some uri like ?auth=true
   }
   else{
+    //send back to dart for error message and handling
     console.log(this.responseText);
     alert(this.responseText);
   }
 }
+
 //initial request for authorization
+//have dart call this with "Login to Spotify" Button
 function requestAuth(){
   let url = "https://accounts.spotify.com/authorize";
   url += "?client_id=" + client_id;
@@ -113,6 +100,7 @@ function callApi(method, endpoint, body, responseHandler){
   xhr.onload = responseHandler;
 }
 //gets playlists
+//dart will call this to display playlists on sidebar
 function getPlaylists(){
   callApi("GET", get_playlists_uri + "?limit=1", null, handleGetPlaylistResponse);
 }
@@ -123,24 +111,21 @@ function handleGetPlaylistResponse(){
     console.log(response);
     let i = 0;
     response.items.forEach(element=> {
-      //this part can change, is only a placeholder
-      //returns for each element returned 
-      ++i;
-      localStorage.setItem("id" + i, element.id);
-      localStorage.setItem("name" + i, element.name);
-    })
-    onPageLoad();
+      //send necessary info to dart, element.name, element.images, element.id etc. for it to list playlists and open them later
+    });
   }
   else if (this.status == 401){
     refreshAccessToken();
-    onPageLoad();
+    //return false to dart, have dart call getPlaylists again
   }
   else{
+    //return to dart for error display and handling
     console.log(this.responseText);
     alert(this.responseText);
   }
 }
 //getsPlaylistItems
+//dart will use this whenever displaying tracks in a playlist
 function getPlaylistItems(playlist_id){
   callApi("GET", get_playlist_items +
       playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
@@ -153,16 +138,13 @@ function playlistItemResponseHandler(){
     console.log(response);
     let i = 0;
     response.items.forEach(element=> {
-      //more placeholder
-      ++i;
-      localStorage.setItem("songID" + i, element.track.id);
-      localStorage.setItem("songName" + i, element.track.name);
+      //send necessary info to dart to display and add/remove songs
+      //yield keyword probably needed here 
     })
-    onPageLoad();
   }
   else if (this.status == 401) {
     refreshAccessToken();
-    onPageLoad();
+    //have dart call getPlaylistItems again
   }
   else {
     console.log(this.responseText);
