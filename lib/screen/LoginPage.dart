@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sortify/App.dart';
 import 'package:sortify/components/textForLoginPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -74,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                         foregroundColor:
                             MaterialStateProperty.all<Color>(Color(0xffeeeeee)),
                       ),
-                      onPressed: () => {print('Button pressed!')},
+                      onPressed: () => requestAuth(),
                       child: Text('Login with Spotify'),
                     )
                   ],
