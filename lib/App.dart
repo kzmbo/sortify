@@ -23,3 +23,7 @@ external String getProfilePicture();
 
 @JS('getPlaylists')
 external Map<String, dynamic> getPlaylists();
+
+@JS('setAttribute')
+external void setAttribute(String attr, double minRange, double maxRange);
+// attr = "danceability", "energy", "artist", or "genre". min and maxrange are used for danceability and energy

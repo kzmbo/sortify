@@ -46,6 +46,12 @@ function getCode() {
   return code;
 }
 
+function setAttribute(attr, minRange, maxRange) {
+  temp.attribute[0] = attr;
+  temp.attribute[1] = minRange;
+  temp.attribute[2] = maxRange;
+}
+
 //gets access token using auth code
 function fetchAccessToken(code) {
 
