@@ -151,6 +151,3 @@ function playlistItemResponseHandler(){
     alert(this.responseText);
   }
 }
-
-
-export default App;
