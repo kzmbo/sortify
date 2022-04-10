@@ -8,12 +8,21 @@ const redirect_uri = "http://localhost:3000";
 const client_id = config.id;
 const client_secret = config.secret;
 const TOKEN = "https://accounts.spotify.com/api/token";
+<<<<<<< Updated upstream
 var temp = {
   attribute: {},
   new_playlist_id: "",
   song_stack: [],
   current_playlist_id: "",
 }
+=======
+temp = {
+  current_playlist_id: '',
+  song_stack: [],
+  new_playlist_id: '',
+  attribute: {}
+};
+>>>>>>> Stashed changes
 
 var access_token;
 var refresh_token;
