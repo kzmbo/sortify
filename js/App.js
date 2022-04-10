@@ -14,23 +14,23 @@ var access_token;
 var refresh_token;
 var user_id;
 
-function onPageLoad(){
-  if (window.location.search.length > 0){
+function onPageLoad() {
+  if (window.location.search.length > 0) {
     handleRedirect();
   }
 }
 
-function handleRedirect(){
+function handleRedirect() {
   let code = getCode();
   fetchAccessToken(code);
   window.history.pushState("", "", redirect_uri);
 }
 
 //parses spotify auth code
-function getCode(){
+function getCode() {
   let code = null;
   const queryString = window.location.search;
-  if (queryString.length > 0){
+  if (queryString.length > 0) {
 
     const urlParams = new URLSearchParams(queryString);
     code = urlParams.get('code');
@@ -40,7 +40,7 @@ function getCode(){
 }
 
 //gets access token using auth code
-function fetchAccessToken(code){
+function fetchAccessToken(code) {
 
   let body = "grant_type=authorization_code";
   body += "&code=" + code;
@@ -51,7 +51,7 @@ function fetchAccessToken(code){
 
 }
 //refreshes token when expired
-function refreshAccessToken(){
+function refreshAccessToken() {
   refresh_token = localStorage.getItem("refresh_token");
   let body = "grant_type=refresh_token";
   body += "&refresh_token=" + refresh_token;
@@ -60,7 +60,7 @@ function refreshAccessToken(){
 }
 
 //calls for authorization
-function callAuthorizationApi(body){
+function callAuthorizationApi(body) {
 
   let xhr = new XMLHttpRequest();
   xhr.open("POST", TOKEN, true);
@@ -70,21 +70,21 @@ function callAuthorizationApi(body){
   xhr.onload = handleAuthorizationResponse;
 }
 //handles response
-function handleAuthorizationResponse(){
-  if (this.status == 200){
+function handleAuthorizationResponse() {
+  if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
-    if (data.access_token != undefined){
+    if (data.access_token != undefined) {
       access_token = data.access_token;
       localStorage.setItem("access_token", access_token);
     }
-    if (data.refresh_token != undefined){
+    if (data.refresh_token != undefined) {
       refresh_token = data.refresh_token;
       localStorage.setItem("refresh_token", refresh_token);
     }
     getCurrentUserID();
   }
-  else{
+  else {
     //send back to dart for error message and handling
     console.log(this.responseText);
     alert(this.responseText);
@@ -93,7 +93,7 @@ function handleAuthorizationResponse(){
 
 //initial request for authorization
 //have dart call this with "Login to Spotify" Button
-function requestAuth(){
+function requestAuth() {
   let url = "https://accounts.spotify.com/authorize";
   url += "?client_id=" + client_id;
   url += "&response_type=code";
@@ -103,7 +103,7 @@ function requestAuth(){
   window.location.href = url;
 }
 //general function for calling api
-function callApi(method, endpoint, body, responseHandler){
+function callApi(method, endpoint, body, responseHandler) {
   let url = endpoint;
   let xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
@@ -114,24 +114,24 @@ function callApi(method, endpoint, body, responseHandler){
 }
 //gets playlists
 //dart will call this to display playlists on sidebar
-function getPlaylists(){
+function getPlaylists() {
   callApi("GET", get_playlists_uri, null, handleGetPlaylistResponse);
 }
 //handles response for getplaylists
-function handleGetPlaylistResponse(){
-  if (this.status == 200){
+function handleGetPlaylistResponse() {
+  if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
     let i = 0;
-    response.items.forEach(element=> {
+    response.items.forEach(element => {
       //send necessary info to dart, element.name, element.images, element.id etc. for it to list playlists and open them later
     });
   }
-  else if (this.status == 401){
+  else if (this.status == 401) {
     refreshAccessToken();
     //return false to dart, have dart call getPlaylists again
   }
-  else{
+  else {
     //return to dart for error display and handling
     console.log(this.responseText);
     alert(this.responseText);
@@ -139,18 +139,18 @@ function handleGetPlaylistResponse(){
 }
 //getsPlaylistItems
 //dart will use this whenever displaying tracks in a playlist
-function getPlaylistItems(playlist_id){
+function getPlaylistItems(playlist_id) {
   callApi("GET", get_playlist_items +
-      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
-      null, playlistItemResponseHandler);
+    playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+    null, playlistItemResponseHandler);
 }
 //handles above function
-function playlistItemResponseHandler(){
-  if (this.status == 200){
+function playlistItemResponseHandler() {
+  if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
     let i = 0;
-    response.items.forEach(element=> {
+    response.items.forEach(element => {
       //send necessary info to dart to display and add/remove songs
       //yield keyword probably needed here 
     })
@@ -165,15 +165,15 @@ function playlistItemResponseHandler(){
   }
 }
 //used only internally
-function getCurrentUserID(){
+function getCurrentUserID() {
   callApi("GET", get_current_user_id, null, getCurrentUserIDResponseHandler);
 }
 
-function getCurrentUserIDResponseHandler(){
-  if (this.status == 200){
+function getCurrentUserIDResponseHandler() {
+  if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
-    if (response.id != undefined){
+    if (response.id != undefined) {
       user_id = response.id;
       localStorage.setItem("user_id", user_id);
     }
@@ -190,11 +190,11 @@ function getCurrentUserIDResponseHandler(){
 }
 
 //called internally by this same file and by user when creating empty playlist
-function postNewPlaylist(name, description, is_public){
-  if (user_id == undefined){
+function postNewPlaylist(name, description, is_public) {
+  if (user_id == undefined) {
     user_id = localStorage.getItem("user_id")
   }
-  if (user_id == undefined){
+  if (user_id == undefined) {
     getCurrentUserID();
   }
   let body = {
@@ -205,11 +205,11 @@ function postNewPlaylist(name, description, is_public){
   callApi("POST", post_new_playlist + user_id + "/playlists", JSON.stringify(body), postNewPlaylistResponseHandler);
 }
 
-function postNewPlaylistResponseHandler(){
-   if (this.status == 201){
+function postNewPlaylistResponseHandler() {
+  if (this.status == 201) {
     //have dart update its UI elements to reflect change
-     var response = JSON.parse(this.responseText);
-     localStorage.getItem("TempStorage").new_playlist_id = response.id;
+    var response = JSON.parse(this.responseText);
+    localStorage.getItem("TempStorage").new_playlist_id = response.id;
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -222,14 +222,14 @@ function postNewPlaylistResponseHandler(){
   }
 }
 
-function postSongToPlaylist(songs_to_add_arr, playlist_id){
+function postSongToPlaylist(songs_to_add_arr, playlist_id) {
   songs_to_add_arr.forEach((element, index) =>
     songs_to_add_arr[index] = "spotify:track:" + element);
   callApi("POST", post_delete_to_playlist + playlist_id + "/tracks?uris=" + encodeURI(songs_to_add_arr), null, postSongToPlaylistHandler);
 }
 
-function postSongToPlaylistHandler(){
-  if (this.status == 201){
+function postSongToPlaylistHandler() {
+  if (this.status == 201) {
     //have dart update its UI elements to reflect change
   }
   else if (this.status == 401) {
@@ -242,17 +242,17 @@ function postSongToPlaylistHandler(){
   }
 }
 
-function deleteItemFromPlaylist(songs_to_delete_arr, playlist_id){
-  let body = {tracks:[]}
+function deleteItemFromPlaylist(songs_to_delete_arr, playlist_id) {
+  let body = { tracks: [] }
   songs_to_delete_arr.forEach(element =>
-    body.tracks.push({uri:"spotify:track:" + element})
+    body.tracks.push({ uri: "spotify:track:" + element })
   );
   alert(JSON.stringify(body));
   callApi("DELETE", post_delete_to_playlist + playlist_id + "/tracks", JSON.stringify(body), deleteItemFromPlaylistResponseHandler);
 }
 
-function deleteItemFromPlaylistResponseHandler(){
-  if (this.status == 200){
+function deleteItemFromPlaylistResponseHandler() {
+  if (this.status == 200) {
     //have dart update its UI elements to reflect change
   }
   else if (this.status == 401) {
@@ -266,12 +266,12 @@ function deleteItemFromPlaylistResponseHandler(){
   }
 }
 
-function removePlaylist(playlist_id){
+function removePlaylist(playlist_id) {
   callApi("DELETE", remove_playlist + playlist_id + "/followers", null, removePlaylistResponseHandler);
 }
 
-function removePlaylistResponseHandler(){
-  if (this.status == 200){
+function removePlaylistResponseHandler() {
+  if (this.status == 200) {
     //have dart update its UI elements to reflect change
   }
   else if (this.status == 401) {
@@ -285,26 +285,47 @@ function removePlaylistResponseHandler(){
   }
 }
 
-function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute ){
+function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute) {
   postNewPlaylist(playlist_name, playlist_desc, is_public);
   localStorage.getItem("TempStorage").attribute = attribute;
   callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
-  null, newPlayListByAttributeResponseHandler);
+    null, newPlayListByAttributeResponseHandler);
 }
 
-function newPlaylistByAttributeResponseHandler()
-{
-  if (this.status == 200){
-    var reponse = JSON.parse(this.reponseText);
-    console.log(reponse);
+function newPlaylistByAttributeResponseHandler() {
+  if (this.status == 200) {
+    var response = JSON.parse(this.responseText);
+    console.log(response);
     let attribute = localStorage.getItem("TempStorage").attribute;
     //enumeration / if case statement, check for which attribute you need to check for
     //attribute[0] = "popularity", case(element.id), element.popularity, attribute[1] = value
-    reponse.items.forEach(element=> {
-      if (){
-        postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
-      }
-    })
+
+    switch (attribute[0]) {
+      case "energy":
+        response.items.forEach(element => {
+          if (attribute[1] <= element.energy <= attribute[2]) {
+            postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+          }
+        })
+        break;
+      case "danceability":
+        response.items.forEach(element => {
+          if (attribute[1] <= element.danceability <= attribute[2]) {
+            postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+          }
+        })
+        break;
+      case "artist":
+        response.items.forEach(element => {
+          if (attribute[1] == element.artists.id) {
+            postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+          }
+        })
+        break;
+      default:
+        // Impossible selection of attribute?
+        console.log("oopsie woopsie we made a fucky wucky! bad attribute[0] in App.js newPlaylistByAttributeHandler")
+    }
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -316,21 +337,19 @@ function newPlaylistByAttributeResponseHandler()
   }
 }
 
-function removeByAttribute(playlist_id, attribute)
-{
+function removeByAttribute(playlist_id, attribute) {
   callApi("GET", get_playlist_items +
-      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
-      null, removeByAttrResponseHandler());
+    playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+    null, removeByAttrResponseHandler());
 }
 
-function removeByAttrResponseHandler()
-{
-  if (this.status == 200){
-    var reponse = JSON.parse(this.reponseText);
-  console.log(reponse);
-  let i = 0;
-  reponse.items.forEach(element=> {
-    //send necessary info to dart to display and remove songs
+function removeByAttrResponseHandler() {
+  if (this.status == 200) {
+    var response = JSON.parse(this.responseText);
+    console.log(response);
+    let i = 0;
+    response.items.forEach(element => {
+      //send necessary info to dart to display and remove songs
       //yield keyword probably needed here 
     })
   }
@@ -341,24 +360,22 @@ function removeByAttrResponseHandler()
   else {
     console.log(this.responseText);
     alert(this.responseText);
-}
+  }
 }
 
-function keepByAttribute(playlist_id, attribute)
-{
+function keepByAttribute(playlist_id, attribute) {
   callApi("GET", get_playlist_items +
-      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
-      null, keepByAttrResponseHandler());
+    playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+    null, keepByAttrResponseHandler());
 }
 
-function keepByAttrResponseHandler()
-{
-  if (this.status == 200){
-    var reponse = JSON.parse(this.reponseText);
-  console.log(reponse);
-  let i = 0;
-  reponse.items.forEach(element=> {
-    //send necessary info to dart to display and keep songs
+function keepByAttrResponseHandler() {
+  if (this.status == 200) {
+    var response = JSON.parse(this.responseText);
+    console.log(response);
+    let i = 0;
+    response.items.forEach(element => {
+      //send necessary info to dart to display and keep songs
       //yield keyword probably needed here 
     })
   }
