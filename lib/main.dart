@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         theme: ThemeData(fontFamily: 'Montserrat'),
         home: const Scaffold(
-          body: LoginPage(), // Dashboard(),
+          //body: LoginPage(),
+          body: Dashboard(),
         ));
   }
 }
