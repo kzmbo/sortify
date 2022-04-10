@@ -5,6 +5,7 @@ import 'package:sortify/App.dart';
 
 void main() {
   runApp(const MyApp());
+  onPageLoad();
 }
 
 class MyApp extends StatelessWidget {
