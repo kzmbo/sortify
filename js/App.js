@@ -1,7 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import 'package:js/js.dart';
 
 function App() {
+  print('hello')
   onPageLoad();
   return (
       <button onClick = {() => requestAuth()}> try to authorize </button>
@@ -87,6 +89,10 @@ function requestAuth(){
   url += "&showdialog=true";
   url += "&scope=playlist-modify-public playlist-read-private playlist-modify-private";
   window.location.href = url;
+}
+
+function printH(){
+  print('hello')
 }
 
 export default App;
