@@ -1,5 +1,8 @@
+const post_delete_to_playlist = "https://api.spotify.com/v1/playlists/";
+const post_new_playlist = "https://api.spotify.com/v1/users/";
+const get_current_user_id = "https://api.spotify.com/v1/me";
 const get_playlist_items = "https://api.spotify.com/v1/playlists/";
-const get_playlists_uri = "https://api.spotify.com/v1/me/playlists";
+const get_playlists_uri = "https://api.spotify.com/v1/me/playlists"
 const redirect_uri = "http://localhost:3000";
 const client_id = "8405c732c9e44daf81d6a21cb5a0e8fc";
 const client_secret = "c33d9877c3a04803b131247f31644d23";
@@ -7,6 +10,14 @@ const TOKEN = "https://accounts.spotify.com/api/token";
 
 var access_token;
 var refresh_token;
+var user_id;
+
+function onPageLoad(){
+  if (window.location.search.length > 0){
+    handleRedirect();
+  }
+}
+
 function handleRedirect(){
   let code = getCode();
   fetchAccessToken(code);
@@ -69,6 +80,7 @@ function handleAuthorizationResponse(){
       refresh_token = data.refresh_token;
       localStorage.setItem("refresh_token", refresh_token);
     }
+    getCurrentUserID();
   //send back to homepage with some uri like ?auth=true
   }
   else{
@@ -147,6 +159,106 @@ function playlistItemResponseHandler(){
     //have dart call getPlaylistItems again
   }
   else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function getCurrentUserID(){
+  callApi("GET", get_current_user_id, null, getCurrentUserIDResponseHandler);
+}
+
+function getCurrentUserIDResponseHandler(){
+  if (this.status == 200){
+    var response = JSON.parse(this.responseText);
+    console.log(response);
+    if (response.id != undefined){
+      user_id = response.id;
+      localStorage.setItem("user_id", user_id);
+    }
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    getCurrentUserID();
+  }
+  else {
+    //send back to dart for error handling
+    console.log(this.message);
+    alert(this.message);
+  }
+}
+
+//called internally by this same file
+function postNewPlaylist(name, description, is_public){
+  if (user_id == undefined){
+    user_id = localStorage.getItem("user_id")
+  }
+  if (user_id == undefined){
+    getCurrentUserID();
+  }
+  let body = {
+    name: name,
+    description: description,
+    public: is_public
+  };
+  callApi("POST", post_new_playlist + user_id + "/playlists", JSON.stringify(body), postNewPlaylistResponseHandler);
+}
+
+function postNewPlaylistResponseHandler(){
+   if (this.status == 201){
+    //have dart update its UI elements to reflect change
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry playlist creation
+  }
+  else {
+    //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function postSongToPlaylist(songs_to_add_arr, playlist_id){
+  songs_to_add_arr.forEach((element, index) =>
+    songs_to_add_arr[index] = "spotify:track:" + element);
+  callApi("POST", post_delete_to_playlist + playlist_id + "/tracks?uris=" + encodeURI(songs_to_add_arr), null, postSongToPlaylistHandler);
+}
+
+function postSongToPlaylistHandler(){
+  if (this.status == 201){
+    //have dart update its UI elements to reflect change
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry
+  }
+  else {
+    //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function deleteItemFromPlaylist(songs_to_delete_arr, playlist_id){
+  let body = {tracks:[]}
+  songs_to_delete_arr.forEach(element =>
+    body.tracks.push({uri:"spotify:track:" + element})
+  );
+  alert(JSON.stringify(body));
+  callApi("DELETE", post_delete_to_playlist + playlist_id + "/tracks", JSON.stringify(body), deleteItemFromPlaylistResponseHandler);
+}
+
+function deleteItemFromPlaylistResponseHandler(){
+  if (this.status == 200){
+    //have dart update its UI elements to reflect change
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry delete
+  }
+  else {
+    //return to dart for error handling
     console.log(this.responseText);
     alert(this.responseText);
   }
