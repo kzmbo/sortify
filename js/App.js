@@ -17,6 +17,7 @@ var temp = {
   current_playlist_id: "",
   display_name: "",
   profile_picture: "",
+  track_features: [],
 }
 
 var access_token;
@@ -147,7 +148,7 @@ function getPlaylists() {
 function handleGetPlaylistResponse() {
   if (this.status == 200) {
     var response = JSON.parse(this.responseText);
-    return(response);
+    //call dart to create dart objects with passed response.attribute parameters
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -163,7 +164,7 @@ function handleGetPlaylistResponse() {
 //dart will use this whenever displaying tracks in a playlist
 function getPlaylistItems(playlist_id) {
   callApi("GET", get_playlist_items +
-    playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+    playlist_id + "/tracks?fields=items(track)",
     null, playlistItemResponseHandler);
 }
 //handles above function
@@ -171,10 +172,8 @@ function playlistItemResponseHandler() {
   if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
-    let i = 0;
     response.items.forEach(element => {
-      //send necessary info to dart to display and add/remove songs
-      //yield keyword probably needed here 
+      //call dart function createPlaylistItem(element.attribute1, element.attribute2, etc)
     })
   }
   else if (this.status == 401) {
@@ -217,11 +216,11 @@ function setCurrentPlaylist(playlist_id) {
 }
 
 function getUsername() {
-  return 
+  pass
 }
 
 function getProfilePicture() {
-
+  pass
 }
 
 //called internally by this same file and by user when creating empty playlist
@@ -327,18 +326,19 @@ function stackByAttribute() {
     let attribute = temp.attribute;
     //enumeration / if case statement, check for which attribute you need to check for
     //attribute[0] = "popularity", case(element.id), element.popularity, attribute[1] = value
-
     switch (attribute[0]) {
       case "energy":
         response.items.forEach(element => {
-          if (attribute[1] <= element.energy <= attribute[2]) {
+          getTrackAttributes(element.id);
+          if (attribute[1] <= temp.track_features.energy <= attribute[2]) {
             temp.song_stack.push(element.id);
           }
         })
         break;
       case "danceability":
         response.items.forEach(element => {
-          if (attribute[1] <= element.danceability <= attribute[2]) {
+          getTrackAttributes(element.id);
+          if (attribute[1] <= temp.track_features.danceability <= attribute[2]) {
             temp.song_stack.push(element.id);
           }
         })
@@ -352,8 +352,7 @@ function stackByAttribute() {
         break;
       case "genre":
         response.items.forEach(element => {
-          let genre = getTrack
-          if (element.genre.includes(attribute[1])) {
+          if (element.artists[0].genres.includes(attribute[1])) {
             temp.song_stack.push(element.id);
           }
         })
@@ -376,80 +375,29 @@ function stackByAttribute() {
 function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute) {
   postNewPlaylist(playlist_name, playlist_desc, is_public);
   temp.attribute = attribute;
-  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
-    null, newPlayListByAttributeResponseHandler);
+  temp.current_playlist_id = playlist_id;
+  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track)",
+    null, newPlaylistByAttributeResponseHandler);
 }
 
 function newPlaylistByAttributeResponseHandler() {
-  if (this.status == 200) {
-    postItemToPlaylist(stackByAttribute(), temp.new_playlist_id);
-  }
-  else if (this.status == 401) {
-    refreshAccessToken();
-    //have dart call getPlaylistItems again
-  }
-  else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
+  let songStack = stackByAttribute();
+  postSongToPlaylist(songStack, temp.current_playlist_id);
+  temp.song_stack = [];
 }
 
 function removeByAttribute(playlist_id, attribute) {
+  temp.attribute = attribute;
+  temp.current_playlist_id = playlist_id;
   callApi("GET", get_playlist_items +
-    playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+    playlist_id + "/tracks?fields=items(track)",
     null, removeByAttrResponseHandler());
 }
 
 function removeByAttrResponseHandler() {
-  if (this.status == 200) {
-    var response = JSON.parse(this.responseText);
-    console.log(response);
-    deleteItemFromPlaylist(song_stack, temp.current_playlist_id);
-    let i = 0;
-    response.items.forEach(element => {
-      //send necessary info to dart to display and remove songs
-      //yield keyword probably needed here 
-    })
-  }
-  else if (this.status == 401) {
-    refreshAccessToken();
-    //have dart call getPlaylistItems again
-  }
-  else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
-}
-
-function mergePlaylists(playlist1, playlist2) {
-  song_stack = [];
-  
-}
-
-function keepByAttribute(playlist_id, attribute) {
-  callApi("GET", get_playlist_items +
-    playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
-    null, keepByAttrResponseHandler());
-}
-
-function keepByAttrResponseHandler() {
-  if (this.status == 200) {
-    var response = JSON.parse(this.responseText);
-    console.log(response);
-    let i = 0;
-    response.items.forEach(element => {
-      //send necessary info to dart to display and keep songs
-      //yield keyword probably needed here 
-    })
-  }
-  else if (this.status == 401) {
-    refreshAccessToken();
-    //have dart call getPlaylistItems again
-  }
-  else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
+  let songStack = stackByAttribute();
+  deleteItemFromPlaylist(songStack, temp.current_playlist_id);
+  temp.song_stack = [];
 }
 
 function getTrackAttributes(track_id){
@@ -459,7 +407,7 @@ function getTrackAttributes(track_id){
 function trackAttributeResponseHandler(){
   if (this.status == 200){
     var response = JSON.parse(this.responseText);
-    localStorage.setItem("response", String(response.energy) + " " + String(response.danceability));
+    temp.track_features = {danceability:response.danceability, energy:response.energy};
   }
   else if (this.status == 401) {
     refreshAccessToken();
