@@ -8,12 +8,12 @@ const redirect_uri = "http://localhost:3000";
 const client_id = config.id;
 const client_secret = config.secret;
 const TOKEN = "https://accounts.spotify.com/api/token";
-localStorage.setItem("TempStorage", {
-  current_playlist_id: '',
+var temp = {
+  attribute: {},
+  new_playlist_id: "",
   song_stack: [],
-  new_playlist_id: '',
-  attribute: []
-});
+  current_playlist_id: "",
+}
 
 var access_token;
 var refresh_token;
@@ -126,11 +126,7 @@ function getPlaylists() {
 function handleGetPlaylistResponse() {
   if (this.status == 200) {
     var response = JSON.parse(this.responseText);
-    console.log(response);
-    let i = 0;
-    response.items.forEach(element => {
-      //send necessary info to dart, element.name, element.images, element.id etc. for it to list playlists and open them later
-    });
+    return(response);
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -194,6 +190,18 @@ function getCurrentUserIDResponseHandler() {
   }
 }
 
+function setCurrentPlaylist(playlist_id) {
+  temp.current_playlist_id = playlist_id;
+}
+
+function getUsername() {
+  return 
+}
+
+function getProfilePicture() {
+
+}
+
 //called internally by this same file and by user when creating empty playlist
 function postNewPlaylist(name, description, is_public) {
   if (user_id == undefined) {
@@ -214,7 +222,7 @@ function postNewPlaylistResponseHandler() {
   if (this.status == 201) {
     //have dart update its UI elements to reflect change
     var response = JSON.parse(this.responseText);
-    localStorage.getItem("TempStorage").new_playlist_id = response.id;
+    temp.new_playlist_id = response.id;
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -294,7 +302,7 @@ function stackByAttribute() {
   if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
-    let attribute = localStorage.getItem("TempStorage").attribute;
+    let attribute = temp.attribute;
     //enumeration / if case statement, check for which attribute you need to check for
     //attribute[0] = "popularity", case(element.id), element.popularity, attribute[1] = value
 
@@ -302,35 +310,35 @@ function stackByAttribute() {
       case "energy":
         response.items.forEach(element => {
           if (attribute[1] <= element.energy <= attribute[2]) {
-            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            temp.song_stack.push(element.id);
           }
         })
         break;
       case "danceability":
         response.items.forEach(element => {
           if (attribute[1] <= element.danceability <= attribute[2]) {
-            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            temp.song_stack.push(element.id);
           }
         })
         break;
       case "artist":
         response.items.forEach(element => {
           if (attribute[1] == element.artists.id) {
-            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            temp.song_stack.push(element.id);
           }
         })
         break;
       case "genre":
         response.items.forEach(element => {
           if (element.genre.includes(attribute[1])) {
-            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            temp.song_stack.push(element.id);
           }
         })
       default:
         // Impossible selection of attribute?
         console.log("oopsie woopsie we made a fucky wucky! bad attribute[0]")
       }
-      return localStorage.getItem("TempStorage").song_stack
+      return temp.song_stack
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -344,14 +352,14 @@ function stackByAttribute() {
 
 function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute) {
   postNewPlaylist(playlist_name, playlist_desc, is_public);
-  localStorage.getItem("TempStorage").attribute = attribute;
+  temp.attribute = attribute;
   callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
     null, newPlayListByAttributeResponseHandler);
 }
 
 function newPlaylistByAttributeResponseHandler() {
   if (this.status == 200) {
-    postItemToPlaylist(stackByAttribute(), localStorage.getItem("TempStorage").new_playlist_id);
+    postItemToPlaylist(stackByAttribute(), temp.new_playlist_id);
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -373,6 +381,7 @@ function removeByAttrResponseHandler() {
   if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
+    deleteItemFromPlaylist(song_stack, temp.current_playlist_id);
     let i = 0;
     response.items.forEach(element => {
       //send necessary info to dart to display and remove songs
@@ -414,4 +423,3 @@ function keepByAttrResponseHandler() {
     alert(this.responseText);
   }
 }
-
