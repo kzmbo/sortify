@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sortify/components/textForLoginPage.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key }) : super(key: key);
 
@@ -13,13 +12,29 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Color(0xff1DB954),
+            Color(0xff13632F),
+            Color(0xff151616)
+          ]
+        )
+      ),
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            color: Color(0xff171717),
+            decoration: BoxDecoration(
+              color: Color(0xff171717),
+              border: Border.all(width: 1, color: Color(0xff171717)),
+              borderRadius: const BorderRadius.all(const Radius.circular(20))
+            ),
+            //
             width: 500,
             height: 600,
             child: Column(
@@ -57,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1DB954)),
                     foregroundColor: MaterialStateProperty.all<Color>(Color(0xffeeeeee)),
                   ),
-                  onPressed: () { },
+                  onPressed: () {
+
+                  },
                   child: Text('Login with Spotify'),
                 )
               ],
