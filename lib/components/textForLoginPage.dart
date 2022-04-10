@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
 class TextForLoginPage extends StatelessWidget {
-  // const TextForLoginPage({ Key? key }) : super(key: key); 
+  // const TextForLoginPage({ Key? key }) : super(key: key);
 
-  TextForLoginPage(this.text);
+  TextForLoginPage(this.text, double this.size, FontWeight this.weight);
 
   final String text;
+  final double size;
+  final FontWeight weight;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(text, 
+      child: Text(
+        text,
         style: TextStyle(
           color: Color(0xffeeeeee),
-          fontSize: 30,
+          fontSize: size,
+          fontWeight: weight,
         ),
         textAlign: TextAlign.center,
       ),
