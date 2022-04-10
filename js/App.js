@@ -400,8 +400,6 @@ function removeByAttrResponseHandler() {
   temp.song_stack = [];
 }
 
-<<<<<<< HEAD
-=======
 function getTrackAttributes(track_id){
   callApi("GET", get_track_audio_features + track_id, null, trackAttributeResponseHandler);
 }
@@ -443,4 +441,3 @@ function userProfResponseHandler(){
     alert(this.responseText);
   }
 }
->>>>>>> 5507d933c955237c212743dc495cad26fcc466bb
