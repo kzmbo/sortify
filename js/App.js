@@ -15,11 +15,20 @@ var temp = {
   new_playlist_id: "",
   song_stack: [],
   current_playlist_id: "",
+  display_name: "",
+  profile_picture: "",
 }
 
 var access_token;
 var refresh_token;
 var user_id;
+
+function getTemp() {
+  temp.display_name = localStorage.getItem("display_name");
+  temp.profile_picture = localStorage.getItem("profile_picture");
+
+  return temp;
+}
 
 function onPageLoad() {
   if (window.location.search.length > 0) {
@@ -408,6 +417,11 @@ function removeByAttrResponseHandler() {
   }
 }
 
+function mergePlaylists(playlist1, playlist2) {
+  song_stack = [];
+  
+}
+
 function keepByAttribute(playlist_id, attribute) {
   callApi("GET", get_playlist_items +
     playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
@@ -461,8 +475,9 @@ function getUserProf(user_id){
 function userProfResponseHandler(){
     if (this.status == 200){
       var response = JSON.parse(this.responseText);
-      alert(response.display_name);
-      response.images.forEach(element => alert(element.url));
+      localStorage.setItem("display_name", response.display_name);
+      response.images.forEach(element => 
+        localStorage.setItem("profile_picture", element.url));
   }
   else if (this.status == 401) {
     refreshAccessToken();
