@@ -12,15 +12,7 @@ void main() {
   runApp(const FirstRoute());
   onPageLoad();
 
-  setProperty(window, 'callLoadDashboard', allowInterop(loadDashboard));
-}
-
-void loadDashboard() {
-  /*Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const SecondRoute()),
-  );*/
-  print("trying to go to dashboard! im trying really hard, daddy!!");
+  //setProperty(window, 'callLoadDashboard', allowInterop(FirstRoute.loadDashboard));
 }
 
 class FirstRoute extends StatelessWidget {
