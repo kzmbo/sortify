@@ -23,6 +23,10 @@ var access_token;
 var refresh_token;
 var user_id;
 
+function getValue(value) {
+  return Function("temp." + value);
+}
+
 function getTemp() {
   temp.display_name = localStorage.getItem("display_name");
   temp.profile_picture = localStorage.getItem("profile_picture");
