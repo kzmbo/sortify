@@ -1,3 +1,5 @@
+const get_user_prof = "https://api.spotify.com/v1/users/";
+const get_track_audio_features = "https://api.spotify.com/v1/audio-features/";
 const remove_playlist = "https://api.spotify.com/v1/playlists/";
 const post_delete_to_playlist = "https://api.spotify.com/v1/playlists/";
 const post_new_playlist = "https://api.spotify.com/v1/users/";
@@ -178,6 +180,7 @@ function getCurrentUserIDResponseHandler() {
       user_id = response.id;
       localStorage.setItem("user_id", user_id);
     }
+    getUserProf(user_id);
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -419,6 +422,27 @@ function keepByAttrResponseHandler() {
     //have dart call getPlaylistItems again
   }
   else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function getUserProf(user_id){
+  callApi("GET", get_user_prof + user_id, null, userProfResponseHandler);
+}
+
+function userProfResponseHandler(){
+    if (this.status == 200){
+      var response = JSON.parse(this.responseText);
+      alert(response.display_name);
+      response.images.forEach(element => alert(element.url));
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry
+  }
+  else {
+    //return to dart for error handling
     console.log(this.responseText);
     alert(this.responseText);
   }
