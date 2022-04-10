@@ -81,7 +81,6 @@ function handleAuthorizationResponse(){
       localStorage.setItem("refresh_token", refresh_token);
     }
     getCurrentUserID();
-  //send back to homepage with some uri like ?auth=true
   }
   else{
     //send back to dart for error message and handling
@@ -163,7 +162,7 @@ function playlistItemResponseHandler(){
     alert(this.responseText);
   }
 }
-
+//used only internally
 function getCurrentUserID(){
   callApi("GET", get_current_user_id, null, getCurrentUserIDResponseHandler);
 }
@@ -188,7 +187,7 @@ function getCurrentUserIDResponseHandler(){
   }
 }
 
-//called internally by this same file
+//called internally by this same file and by user when creating empty playlist
 function postNewPlaylist(name, description, is_public){
   if (user_id == undefined){
     user_id = localStorage.getItem("user_id")
@@ -263,6 +262,3 @@ function deleteItemFromPlaylistResponseHandler(){
     alert(this.responseText);
   }
 }
-
-
-export default App;
