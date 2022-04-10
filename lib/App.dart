@@ -25,9 +25,6 @@ external String getUsername();
 external String getProfilePicture();
 
 @JS('getPlaylists')
-<<<<<<< Updated upstream
-external Map<String, dynamic> getPlaylists();
-=======
 external JsObject getPlaylists();
 
 @JS('setAttribute')
@@ -54,4 +51,3 @@ List<String> getObjectKeys(JsObject object) => context['Object']
     .callMethod('getOwnPropertyNames', [object])
     .toList()
     .cast<String>();
->>>>>>> Stashed changes
