@@ -4,6 +4,7 @@ const redirect_uri = "http://localhost:3000";
 const client_id = "8405c732c9e44daf81d6a21cb5a0e8fc";
 const client_secret = "c33d9877c3a04803b131247f31644d23";
 const TOKEN = "https://accounts.spotify.com/api/token";
+localStorage.setItem("TempStorage", {});
 
 var access_token;
 var refresh_token;
@@ -152,22 +153,77 @@ function playlistItemResponseHandler(){
   }
 }
 
-
-function newPlayListByAttribute(playlist_id, attribute )
-{
-  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
-  null, newPlayListByAttirubte);
+function getCurrentUserIDResponseHandler(){
+  if (this.status == 200){
+    var response = JSON.parse(this.responseText);
+    console.log(response);
+    if (response.id != undefined){
+      user_id = response.id;
+      localStorage.setItem("user_id", user_id);
+    }
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    getCurrentUserID();
+  }
+  else {
+    //send back to dart for error handling
+    console.log(this.message);
+    alert(this.message);
+  }
 }
 
-function newPlayListResponseHandler()
+//called internally by this same file
+function postNewPlaylist(name, description, is_public){
+  if (user_id == undefined){
+    user_id = localStorage.getItem("user_id")
+  }
+  if (user_id == undefined){
+    getCurrentUserID();
+  }
+  let body = {
+    name: name,
+    description: description,
+    public: is_public
+  };
+  callApi("POST", post_new_playlist + user_id + "/playlists", JSON.stringify(body), postNewPlaylistResponseHandler);
+}
+
+function postNewPlaylistResponseHandler(){
+   if (this.status == 201){
+     var response = JSON.parse(this.responseText);
+     localStorage.getItem("TempStorage").new_playlist_id = response.id;
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry playlist creation
+  }
+  else {
+    //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function newPlayListByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute ){
+  postNewPlaylist(playlist_name, playlist_desc, is_public);
+  localStorage.getItem("TempStorage").attribute = attribute;
+  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
+  null, newPlayListByAttributeResponseHandler);
+}
+
+function newPlayListByAttributeResponseHandler()
 {
   if (this.status == 200){
     var reponse = JSON.parse(this.reponseText);
-  console.log(reponse);
-  let i = 0;
-  reponse.items.forEach(element=> {
-    //send necessary info to dart to display and add songs
-      //yield keyword probably needed here 
+    console.log(reponse);
+    let attribute = localStorage.getItem("TempStorage").attribute;
+    //enumeration / if case statement, check for which attribute you need to check for
+    //attribute[0] = "popularity", case(element.id), element.popularity, attribute[1] = value
+    reponse.items.forEach(element=> {
+      if (){
+        postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+      }
     })
   }
   else if (this.status == 401) {
