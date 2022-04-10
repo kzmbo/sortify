@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sortify/App.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard ({ Key? key}) : super(key: key);
@@ -8,16 +9,52 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> { 
+  
   final inputController = TextEditingController();
   final List<String> options = ['Merge', 'Create', 'Split'];
   List<String> playlistTest = List<String>.generate(20, (index) => 'Song ${index + 1}');
   String? currentOption = 'Merge';
+
+  double _currentSliderValue = 20;
+  Widget addSlider(){
+    return Slider(
+      value: _currentSliderValue,
+      max: 100,
+      divisions: 5,
+      label: _currentSliderValue.round().toString(),
+      onChanged: (double value) {
+        setState(() {
+          _currentSliderValue = value;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
+          //button
+          TextButton(
+            style: ButtonStyle(
+              //minimumSize: MaterialStateProperty.all(10),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Color(0xff1DB954)),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                  Color(0xffeeeeee)),
+            ),
+            onPressed: () => requestAuth(),
+            child: const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'Login with Spotify',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            )
+          ),
 
           //Header
           Container(
@@ -65,32 +102,35 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     //by mood
                     OutlinedButton(
-                      onPressed: (){}, 
-                      child: Text('By mood')
+                      onPressed: (){setAttribute('artist', 0, 0);}, 
+                      child: Text('By Artist')
                     ),//end by mood
 
                     SizedBox(width: 10),
 
                     //by Artist
                     OutlinedButton(
-                      onPressed: (){}, 
-                      child: Text('By Artist')
+                      onPressed: (){setAttribute('danceability', 0, 1);}, 
+                      child: Text('By Danceability')
                     ),//end by Artist
 
                     SizedBox(width: 10),
 
                     //by genre
                     OutlinedButton(
-                      onPressed: (){}, 
-                      child: Text('By Genre')
+                      onPressed: (){
+                        setAttribute('energy', 0, 1);
+                        addSlider();
+                      }, 
+                      child: Text('By Energy')
                     ),//end by genre
 
                     SizedBox(width: 10),
 
                     //by language
                     OutlinedButton(
-                      onPressed: (){}, 
-                      child: Text('By Language')
+                      onPressed: (){setAttribute('Genre', 0, 0);}, 
+                      child: Text('By Genre')
                     ),//end by language
                   ],
                 ),//end buttons
@@ -128,14 +168,14 @@ class _DashboardState extends State<Dashboard> {
                     height: 200,
                     child: Row(
                       children: [
-                        Image(image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'), width: 200,),
+                        Image(image: NetworkImage('https://de-production.imgix.net/colors/browser/dea104.jpg'), width: 200,),
                         SizedBox(width: 10),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('Playlist #1', style: TextStyle(color: Color(0xffeeeeee), fontSize: 22), textAlign: TextAlign.left),
                             SizedBox(height: 6),
-                            Text('Lorem doailjfksjdlkfsaklfslk', style: TextStyle(color: Color(0xffeeeeee), fontSize: 14), textAlign: TextAlign.left),
+                            Text('Playlist desc', style: TextStyle(color: Color(0xffeeeeee), fontSize: 14), textAlign: TextAlign.left),
                           ],
                         )
                       ],
@@ -150,12 +190,12 @@ class _DashboardState extends State<Dashboard> {
                         //Playlist preview
                         Row(
                           children: [
-                            Image(image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'), width: 100,),
+                            Image(image: NetworkImage('https://de-production.imgix.net/colors/browser/dea104.jpg'), width: 100,),
                             SizedBox(width: 10),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Playlist #1', style: TextStyle(color: Color(0xffeeeeee), fontSize: 22), textAlign: TextAlign.left),
+                                Text('Playlist #2', style: TextStyle(color: Color(0xffeeeeee), fontSize: 22), textAlign: TextAlign.left),
                               ],
                             ),
                             SizedBox(width: 50)
