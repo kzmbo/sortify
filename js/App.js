@@ -333,6 +333,7 @@ function stackByAttribute() {
         break;
       case "genre":
         response.items.forEach(element => {
+          let genre = getTrack
           if (element.genre.includes(attribute[1])) {
             temp.song_stack.push(element.id);
           }
@@ -422,6 +423,26 @@ function keepByAttrResponseHandler() {
     //have dart call getPlaylistItems again
   }
   else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function getTrackAttributes(track_id){
+  callApi("GET", get_track_audio_features + track_id, null, trackAttributeResponseHandler);
+}
+
+function trackAttributeResponseHandler(){
+  if (this.status == 200){
+    var response = JSON.parse(this.responseText);
+    localStorage.setItem("response", String(response.energy) + " " + String(response.danceability));
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry
+  }
+  else {
+    //return to dart for error handling
     console.log(this.responseText);
     alert(this.responseText);
   }
