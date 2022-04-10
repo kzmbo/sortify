@@ -151,3 +151,90 @@ function playlistItemResponseHandler(){
     alert(this.responseText);
   }
 }
+
+
+function newPlayListByAttribute(playlist_id, attribute )
+{
+  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+  null, newPlayListByAttirubte);
+}
+
+function newPlayListResponseHandler()
+{
+  if (this.status == 200){
+    var reponse = JSON.parse(this.reponseText);
+  console.log(reponse);
+  let i = 0;
+  reponse.items.forEach(element=> {
+    //send necessary info to dart to display and add songs
+      //yield keyword probably needed here 
+    })
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function removeByAttribute(playlist_id, )
+{
+  callApi("GET", get_playlist_items +
+      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+      null, removeByAttrResponseHandler());
+}
+
+function removeByAttrResponseHandler()
+{
+  if (this.status == 200){
+    var reponse = JSON.parse(this.reponseText);
+  console.log(reponse);
+  let i = 0;
+  reponse.items.forEach(element=> {
+    //send necessary info to dart to display and remove songs
+      //yield keyword probably needed here 
+    })
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
+    console.log(this.responseText);
+    alert(this.responseText);
+}
+}
+
+function keepByAttribute()
+{
+  callApi("GET", get_playlist_items +
+      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+      null, keepByAttrResponseHandler());
+}
+
+function keepByAttrResponseHandler()
+{
+  if (this.status == 200){
+    var reponse = JSON.parse(this.reponseText);
+  console.log(reponse);
+  let i = 0;
+  reponse.items.forEach(element=> {
+    //send necessary info to dart to display and keep songs
+      //yield keyword probably needed here 
+    })
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+
+
