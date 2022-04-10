@@ -5,8 +5,8 @@ const get_current_user_id = "https://api.spotify.com/v1/me";
 const get_playlist_items = "https://api.spotify.com/v1/playlists/";
 const get_playlists_uri = "https://api.spotify.com/v1/me/playlists"
 const redirect_uri = "http://localhost:3000";
-const client_id = config.id;
-const client_secret = config.secret;
+const client_id = spotify_config.id;
+const client_secret = spotify_config.secret;
 const TOKEN = "https://accounts.spotify.com/api/token";
 localStorage.setItem("TempStorage", {});
 
