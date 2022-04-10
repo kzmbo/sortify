@@ -8,6 +8,7 @@ const redirect_uri = "http://localhost:3000";
 const client_id = config.id;
 const client_secret = config.secret;
 const TOKEN = "https://accounts.spotify.com/api/token";
+localStorage.setItem("TempStorage", {});
 
 var access_token;
 var refresh_token;
@@ -207,6 +208,8 @@ function postNewPlaylist(name, description, is_public){
 function postNewPlaylistResponseHandler(){
    if (this.status == 201){
     //have dart update its UI elements to reflect change
+     var response = JSON.parse(this.responseText);
+     localStorage.getItem("TempStorage").new_playlist_id = response.id;
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -234,7 +237,6 @@ function postSongToPlaylistHandler(){
     //return to dart to retry
   }
   else {
-    //return to dart for error handling
     console.log(this.responseText);
     alert(this.responseText);
   }
@@ -278,6 +280,93 @@ function removePlaylistResponseHandler(){
   }
   else {
     //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute ){
+  postNewPlaylist(playlist_name, playlist_desc, is_public);
+  localStorage.getItem("TempStorage").attribute = attribute;
+  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
+  null, newPlayListByAttributeResponseHandler);
+}
+
+function newPlaylistByAttributeResponseHandler()
+{
+  if (this.status == 200){
+    var reponse = JSON.parse(this.reponseText);
+    console.log(reponse);
+    let attribute = localStorage.getItem("TempStorage").attribute;
+    //enumeration / if case statement, check for which attribute you need to check for
+    //attribute[0] = "popularity", case(element.id), element.popularity, attribute[1] = value
+    reponse.items.forEach(element=> {
+      if (){
+        postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+      }
+    })
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function removeByAttribute(playlist_id, attribute)
+{
+  callApi("GET", get_playlist_items +
+      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+      null, removeByAttrResponseHandler());
+}
+
+function removeByAttrResponseHandler()
+{
+  if (this.status == 200){
+    var reponse = JSON.parse(this.reponseText);
+  console.log(reponse);
+  let i = 0;
+  reponse.items.forEach(element=> {
+    //send necessary info to dart to display and remove songs
+      //yield keyword probably needed here 
+    })
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
+    console.log(this.responseText);
+    alert(this.responseText);
+}
+}
+
+function keepByAttribute(playlist_id, attribute)
+{
+  callApi("GET", get_playlist_items +
+      playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
+      null, keepByAttrResponseHandler());
+}
+
+function keepByAttrResponseHandler()
+{
+  if (this.status == 200){
+    var reponse = JSON.parse(this.reponseText);
+  console.log(reponse);
+  let i = 0;
+  reponse.items.forEach(element=> {
+    //send necessary info to dart to display and keep songs
+      //yield keyword probably needed here 
+    })
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
     console.log(this.responseText);
     alert(this.responseText);
   }
