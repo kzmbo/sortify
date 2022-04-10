@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:sortify/screen/LoginPage.dart';
+import 'package:sortify/screen/dashboard.dart';
 
-class TaskBarButtons extends StatelessWidget {
-  //const TaskBarButtons({ Key? key }) : super(key: key);
+class TaskBarButtons extends StatefulWidget {
+  String imageURL;
+  String text;
+  TaskBarButtons({ Key? key, required this.imageURL, required this.text}) : super(key: key);
+  _TaskBarButtonsState createState() => _TaskBarButtonsState(text, imageURL);
+}
 
-  TaskBarButtons(this.imageURL, this.text);
-  
+class _TaskBarButtonsState extends State<TaskBarButtons> {
+  _TaskBarButtonsState(this.text, this.imageURL);
+  final String text; 
   final String imageURL;
-  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +27,23 @@ class TaskBarButtons extends StatelessWidget {
             image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg')
           ),
           SizedBox(width: 5),
-          Text(text, 
-          style: TextStyle(
-            color: Color(0xffF1F1F1),
-            fontSize: 20
-          )
-        ),
+          TextButton(
+            onPressed: () {
+               Navigator.pushReplacement(
+                context, 
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => LoginPage(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            },
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              textStyle: TextStyle(fontSize: 20, color: Color(0xffF1F1F1)), 
+            ),
+            child: Text(text, style: TextStyle(color: Color(0xffF1F1F1)),),
+          ),
         ],
       ),
       )
