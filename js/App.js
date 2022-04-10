@@ -5,10 +5,15 @@ const get_current_user_id = "https://api.spotify.com/v1/me";
 const get_playlist_items = "https://api.spotify.com/v1/playlists/";
 const get_playlists_uri = "https://api.spotify.com/v1/me/playlists"
 const redirect_uri = "http://localhost:3000";
-const client_id = spotify_config.id;
-const client_secret = spotify_config.secret;
+const client_id = config.id;
+const client_secret = config.secret;
 const TOKEN = "https://accounts.spotify.com/api/token";
-localStorage.setItem("TempStorage", {});
+localStorage.setItem("TempStorage", {
+  current_playlist_id: '',
+  song_stack: [],
+  new_playlist_id: '',
+  attribute: []
+});
 
 var access_token;
 var refresh_token;
@@ -304,28 +309,38 @@ function newPlaylistByAttributeResponseHandler() {
       case "energy":
         response.items.forEach(element => {
           if (attribute[1] <= element.energy <= attribute[2]) {
-            postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            //postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
           }
         })
         break;
       case "danceability":
         response.items.forEach(element => {
           if (attribute[1] <= element.danceability <= attribute[2]) {
-            postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            //postItemToPlaylist(element.id, localStorage.getItem("TempStorage").current_playlist_id);
           }
         })
         break;
       case "artist":
         response.items.forEach(element => {
           if (attribute[1] == element.artists.id) {
-            postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+            localStorage.getItem("TempStorage").song_stack.push(element.id);
+            //postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
           }
         })
         break;
+      case "genre":
+        response.items.forEach(element => {
+          if (element.genre.includes(attribute[1])) {
+            localStorage.getItem("TempStorage").song_stack.push(element.id);
+          }
+        })
       default:
         // Impossible selection of attribute?
         console.log("oopsie woopsie we made a fucky wucky! bad attribute[0] in App.js newPlaylistByAttributeHandler")
-    }
+      }
+      postItemToPlaylist(localStorage.getItem("TempStorage").song_stack, localStorage.getItem("TempStorage").new_playlist_id);
   }
   else if (this.status == 401) {
     refreshAccessToken();
