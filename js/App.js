@@ -1,3 +1,4 @@
+const remove_playlist = "https://api.spotify.com/v1/playlists/";
 const post_delete_to_playlist = "https://api.spotify.com/v1/playlists/";
 const post_new_playlist = "https://api.spotify.com/v1/users/";
 const get_current_user_id = "https://api.spotify.com/v1/me";
@@ -263,4 +264,22 @@ function deleteItemFromPlaylistResponseHandler(){
   }
 }
 
+function removePlaylist(playlist_id){
+  callApi("DELETE", remove_playlist + playlist_id + "/followers", null, removePlaylistResponseHandler);
+}
+
+function removePlaylistResponseHandler(){
+  if (this.status == 200){
+    //have dart update its UI elements to reflect change
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry delete
+  }
+  else {
+    //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
 
