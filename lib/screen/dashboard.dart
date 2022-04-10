@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sortify/components/taskBar.dart';
+import 'package:sortify/components/MainDashboard.dart';
+import 'package:sortify/components/taskBarButtons.dart';
+import '../components/taskBar.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({ Key? key }) : super(key: key);
@@ -8,10 +10,12 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<Dashboard> { 
+  GlobalKey mainDashboard = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return Container (
+    return Container(
       child: Column(
         children: [
           //header
@@ -55,7 +59,8 @@ class _DashboardState extends State<Dashboard> {
           ),// end header
           Row(
             children: [
-              TaskBar()
+              TaskBar(),
+              MainDashboard(key: mainDashboard, currentFunction: 'Create'),
             ],
           )
         ],
