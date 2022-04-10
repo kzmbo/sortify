@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sortify/screen/LoginPage.dart';
+import 'package:sortify/screen/dashboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: LoginPage(),
+        body: Dashboard(),//LoginPage(),
       )
     );
   }
