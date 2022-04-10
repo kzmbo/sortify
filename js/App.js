@@ -114,7 +114,7 @@ function callApi(method, endpoint, body, responseHandler){
 //gets playlists
 //dart will call this to display playlists on sidebar
 function getPlaylists(){
-  callApi("GET", get_playlists_uri + "?limit=1", null, handleGetPlaylistResponse);
+  callApi("GET", get_playlists_uri, null, handleGetPlaylistResponse);
 }
 //handles response for getplaylists
 function handleGetPlaylistResponse(){
