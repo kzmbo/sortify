@@ -1,3 +1,5 @@
+const get_user_prof = "https://api.spotify.com/v1/users/";
+const get_track_audio_features = "https://api.spotify.com/v1/audio-features/";
 const remove_playlist = "https://api.spotify.com/v1/playlists/";
 const post_delete_to_playlist = "https://api.spotify.com/v1/playlists/";
 const post_new_playlist = "https://api.spotify.com/v1/users/";
@@ -13,11 +15,24 @@ var temp = {
   new_playlist_id: "",
   song_stack: [],
   current_playlist_id: "",
+  display_name: "",
+  profile_picture: "",
 }
 
 var access_token;
 var refresh_token;
 var user_id;
+
+function getValue(value) {
+  return Function("temp." + value);
+}
+
+function getTemp() {
+  temp.display_name = localStorage.getItem("display_name");
+  temp.profile_picture = localStorage.getItem("profile_picture");
+
+  return temp;
+}
 
 function onPageLoad() {
   if (window.location.search.length > 0) {
@@ -42,6 +57,12 @@ function getCode() {
 
   }
   return code;
+}
+
+function setAttribute(attr, minRange, maxRange) {
+  temp.attribute[0] = attr;
+  temp.attribute[1] = minRange;
+  temp.attribute[2] = maxRange;
 }
 
 //gets access token using auth code
@@ -178,6 +199,7 @@ function getCurrentUserIDResponseHandler() {
       user_id = response.id;
       localStorage.setItem("user_id", user_id);
     }
+    getUserProf(user_id);
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -330,6 +352,7 @@ function stackByAttribute() {
         break;
       case "genre":
         response.items.forEach(element => {
+          let genre = getTrack
           if (element.genre.includes(attribute[1])) {
             temp.song_stack.push(element.id);
           }
@@ -398,6 +421,11 @@ function removeByAttrResponseHandler() {
   }
 }
 
+function mergePlaylists(playlist1, playlist2) {
+  song_stack = [];
+  
+}
+
 function keepByAttribute(playlist_id, attribute) {
   callApi("GET", get_playlist_items +
     playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
@@ -424,3 +452,47 @@ function keepByAttrResponseHandler() {
   }
 }
 
+<<<<<<< HEAD
+=======
+function getTrackAttributes(track_id){
+  callApi("GET", get_track_audio_features + track_id, null, trackAttributeResponseHandler);
+}
+
+function trackAttributeResponseHandler(){
+  if (this.status == 200){
+    var response = JSON.parse(this.responseText);
+    localStorage.setItem("response", String(response.energy) + " " + String(response.danceability));
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry
+  }
+  else {
+    //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function getUserProf(user_id){
+  callApi("GET", get_user_prof + user_id, null, userProfResponseHandler);
+}
+
+function userProfResponseHandler(){
+    if (this.status == 200){
+      var response = JSON.parse(this.responseText);
+      localStorage.setItem("display_name", response.display_name);
+      response.images.forEach(element => 
+        localStorage.setItem("profile_picture", element.url));
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //return to dart to retry
+  }
+  else {
+    //return to dart for error handling
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+>>>>>>> 5507d933c955237c212743dc495cad26fcc466bb

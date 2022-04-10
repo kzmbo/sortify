@@ -8,7 +8,7 @@ import 'package:sortify/App.dart';
 import 'package:js/js_util.dart';
 
 void main() {
-  runApp(const SecondRoute());
+  runApp(const FirstRoute());
   onPageLoad();
 
   //setProperty(window, 'callLoadDashboard', allowInterop(FirstRoute.loadDashboard));

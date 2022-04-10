@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextForLoginPage(projectName, 65, FontWeight.w700),
+              child: TextForLoginPage(projectName, 65, FontWeight.w300),
             ),
             SizedBox(height: 15),
             Container(
@@ -71,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 50),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextForLoginPage(
-                          'Get sorted, use', 24, FontWeight.w100),
+                      child:
+                          TextForLoginPage('Tidy up, use', 24, FontWeight.w100),
                     ),
                     SizedBox(height: 10),
                     Padding(
