@@ -110,7 +110,6 @@ function handleGetPlaylistResponse(){
   if (this.status == 200){
     var response = JSON.parse(this.responseText);
     console.log(response);
-    let i = 0;
     response.items.forEach(element=> {
       //send necessary info to dart, element.name, element.images, element.id etc. for it to list playlists and open them later
     });
@@ -137,7 +136,6 @@ function playlistItemResponseHandler(){
   if (this.status == 200){
     var response = JSON.parse(this.responseText);
     console.log(response);
-    let i = 0;
     response.items.forEach(element=> {
       //send necessary info to dart to display and add/remove songs
       //yield keyword probably needed here 
@@ -220,8 +218,12 @@ function newPlayListByAttributeResponseHandler()
     let attribute = localStorage.getItem("TempStorage").attribute;
     //enumeration / if case statement, check for which attribute you need to check for
     //attribute[0] = "popularity", case(element.id), element.popularity, attribute[1] = value
+    let energy = localStorage.getItem("TempStorage");
     reponse.items.forEach(element=> {
-      if (){
+    // add playlist by using the attribute , whether larger/smaller
+    // attribute of playlist
+    // add the playlist
+    if (attribute[0] == "energy" && attribute[1] > energy){
         postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
       }
     })
@@ -248,11 +250,17 @@ function removeByAttrResponseHandler()
   if (this.status == 200){
     var reponse = JSON.parse(this.reponseText);
   console.log(reponse);
-  let i = 0;
+ 
   reponse.items.forEach(element=> {
+   // get the attribute(energy) and remove a playlist whether it is larger/smaller
+   // attribute < x / attribute > x
+   // remove the playlist
+  if (attribute[0] == "energy" && attribute[1] > energy){
+      removeByAttrResponseHandler(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+    }
+  })
     //send necessary info to dart to display and remove songs
       //yield keyword probably needed here 
-    })
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -276,11 +284,18 @@ function keepByAttrResponseHandler()
   if (this.status == 200){
     var reponse = JSON.parse(this.reponseText);
   console.log(reponse);
-  let i = 0;
+  
+  
   reponse.items.forEach(element=> {
+  // get attribute(energy) from dart functions, then keep playlist smaller/larger than value
+  // if(attribute != someNumber )
+  // keep the playlist
+  if (attribute[0] == "energy" && attribute[1] > energy){
+      keepByAttribute(element.id, localStorage.getItem("TempStorage").new_playlist_id);
+    }
+  })
     //send necessary info to dart to display and keep songs
       //yield keyword probably needed here 
-    })
   }
   else if (this.status == 401) {
     refreshAccessToken();
@@ -291,6 +306,3 @@ function keepByAttrResponseHandler()
     alert(this.responseText);
   }
 }
-
-
-
