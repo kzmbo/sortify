@@ -180,7 +180,7 @@ function newPlayListResponseHandler()
   }
 }
 
-function removeByAttribute(playlist_id, )
+function removeByAttribute(playlist_id, attribute)
 {
   callApi("GET", get_playlist_items +
       playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
@@ -208,7 +208,7 @@ function removeByAttrResponseHandler()
 }
 }
 
-function keepByAttribute()
+function keepByAttribute(playlist_id, attribute)
 {
   callApi("GET", get_playlist_items +
       playlist_id + "/tracks?fields=items(track(id%2Cname%2Calbum(images)))",
