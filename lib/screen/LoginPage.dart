@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sortify/components/textForLoginPage.dart';
+import 'dart:js' as js;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -74,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                         foregroundColor:
                             MaterialStateProperty.all<Color>(Color(0xffeeeeee)),
                       ),
-                      onPressed: () => {print('Button pressed!')},
+                      onPressed: () => {js.context.callMethod('customAlertMessage', ['hey'])},
                       child: Text('Login with Spotify'),
                     )
                   ],
