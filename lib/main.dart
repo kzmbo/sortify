@@ -7,9 +7,8 @@ import 'package:sortify/screen/dashboard.dart';
 import 'package:sortify/App.dart';
 import 'package:js/js_util.dart';
 
-dynamic page = const LoginPage();
 void main() {
-  runApp(const FirstRoute());
+  runApp(const SecondRoute());
   onPageLoad();
 
   //setProperty(window, 'callLoadDashboard', allowInterop(FirstRoute.loadDashboard));
