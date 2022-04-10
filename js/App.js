@@ -290,14 +290,7 @@ function removePlaylistResponseHandler() {
   }
 }
 
-function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute) {
-  postNewPlaylist(playlist_name, playlist_desc, is_public);
-  localStorage.getItem("TempStorage").attribute = attribute;
-  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
-    null, newPlayListByAttributeResponseHandler);
-}
-
-function newPlaylistByAttributeResponseHandler() {
+function stackByAttribute() {
   if (this.status == 200) {
     var response = JSON.parse(this.responseText);
     console.log(response);
@@ -310,7 +303,6 @@ function newPlaylistByAttributeResponseHandler() {
         response.items.forEach(element => {
           if (attribute[1] <= element.energy <= attribute[2]) {
             localStorage.getItem("TempStorage").song_stack.push(element.id);
-            //postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
           }
         })
         break;
@@ -318,7 +310,6 @@ function newPlaylistByAttributeResponseHandler() {
         response.items.forEach(element => {
           if (attribute[1] <= element.danceability <= attribute[2]) {
             localStorage.getItem("TempStorage").song_stack.push(element.id);
-            //postItemToPlaylist(element.id, localStorage.getItem("TempStorage").current_playlist_id);
           }
         })
         break;
@@ -326,7 +317,6 @@ function newPlaylistByAttributeResponseHandler() {
         response.items.forEach(element => {
           if (attribute[1] == element.artists.id) {
             localStorage.getItem("TempStorage").song_stack.push(element.id);
-            //postItemToPlaylist(element.id, localStorage.getItem("TempStorage").new_playlist_id);
           }
         })
         break;
@@ -338,9 +328,30 @@ function newPlaylistByAttributeResponseHandler() {
         })
       default:
         // Impossible selection of attribute?
-        console.log("oopsie woopsie we made a fucky wucky! bad attribute[0] in App.js newPlaylistByAttributeHandler")
+        console.log("oopsie woopsie we made a fucky wucky! bad attribute[0]")
       }
-      postItemToPlaylist(localStorage.getItem("TempStorage").song_stack, localStorage.getItem("TempStorage").new_playlist_id);
+      return localStorage.getItem("TempStorage").song_stack
+  }
+  else if (this.status == 401) {
+    refreshAccessToken();
+    //have dart call getPlaylistItems again
+  }
+  else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function newPlaylistByAttribute(playlist_name, playlist_desc, is_public, playlist_id, attribute) {
+  postNewPlaylist(playlist_name, playlist_desc, is_public);
+  localStorage.getItem("TempStorage").attribute = attribute;
+  callApi("GET", get_playlist_items + playlist_id + "/tracks?fields=items(track(id))",
+    null, newPlayListByAttributeResponseHandler);
+}
+
+function newPlaylistByAttributeResponseHandler() {
+  if (this.status == 200) {
+    postItemToPlaylist(stackByAttribute(), localStorage.getItem("TempStorage").new_playlist_id);
   }
   else if (this.status == 401) {
     refreshAccessToken();
