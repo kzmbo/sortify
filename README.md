@@ -7,11 +7,11 @@ Let's be honest... Spotify's UI is sucks when it comes to effectively editing yo
 
 ### Screenshots: 
 
-![capture1](Capture.PNG)
+![capture1](ss1.PNG)
 
-![capture2](Capture1.PNG)
+![capture2](ss2.PNG)
 
-![caputure3](Capture2.PNG)
+![caputure3](ss3.PNG)
 
 
 
