@@ -1,6 +1,6 @@
 # SpotCleaner - Submission for 2022 BeachHacks 6.0
 
-#### Try it out!: link will be up soon. 
+#### Try it out!: https://spotcleaner.netlify.app/
 
 
 Let's be honest... Spotify's UI is sucks when it comes to effectively editing your playlists. Organizing your music has forever been an infuriating task.Your solution? Tidy up, use SpotCleaner.
