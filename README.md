@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# SpotCleaner - Submission for 2022 BeachHacks 6.0
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Try it out!: link will be up soon. 
 
-## Available Scripts
 
-In the project directory, you can run:
+Let's be honest... Spotify's UI is sucks when it comes to effectively editing your playlists. Organizing your music has forever been an infuriating task.Your solution? Tidy up, use SpotCleaner.
 
-### `npm start`
+### Screenshots: 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![capture1](Capture.PNG)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![capture2](Capture1.PNG)
 
-### `npm test`
+![caputure3](Capture2.PNG)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Inspiration
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Our team loves to listen to music, but we don't love the atrocity that the 'developers' over at Spotify made. Being able to only add 1 song at a time to a playlist is straight up evil, a thing of the past! What are we doing, LimeWiring songs with dial-up and burning to a CD? Disgusting!
 
-### `npm run eject`
+## What it does
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+SpotCleaner logs you into Spotify, loads your playlists, and gives you the control over your music life that you truly deserve. The ability to add multiple songs and merge playlists together. A truly modern solution for a modern problem.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## How we built it
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+For our first version, we used Flutter and JS. This version uses React and NodeJS to handle the front-end and back-end.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Challenges we ran into
 
-## Learn More
+Sadly, Flutter and JS don't play nice! Making them work together was the greatest challenge, and it ate a lot of our team leaving us disappointed and unfinished. When switching over to React, we had some issues posting data back to Spotify. Thankfully, after having 60 tabs opens, this problem was resolved. 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Accomplishments that we're proud of
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+We love what we made, it's a great tool! Through the JavaScript console, you can do exactly what we wanted, and the UI looks just like we wanted it to -- just without information from the back-end. After rewritting it in JS via React, we are able to create playlist from our app by merging selected playlists!
 
-### Code Splitting
+## What we learned
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Committing to a stack for a project without knowing how it will integrate is a dangerous game. Although you may have perks individually for whatever you're developing, it can lead to more headaches and problems if your languages don't easily work together. However, we definitely gained more confidences when working with React and JS. 
 
-### Analyzing the Bundle Size
+## What's next for SpotCleaning
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+We plan on adding more features to the app as we still like this project idea. But lessons were learned with the stack we chose.
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
