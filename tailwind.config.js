@@ -15,5 +15,5 @@ module.exports = {
       'red': '#D22B2B'   
     }
   },
-  plugins: [],
+  plugins: [], 
 }
