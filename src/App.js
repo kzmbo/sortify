@@ -4,7 +4,7 @@ import axios from 'axios'
 function App() {
   const CLIENT_ID = '4b3522cfc2e94e13adbabba2436f012d';
   const RESPONSE_TYPE = 'token';
-  const REDIRECT_URI = 'http://localhost:3000/';
+  const REDIRECT_URI = 'https://spotcleaner.netlify.app/';
   const AUTH_URI = 'http://accounts.spotify.com/en/authorize'
 
   //Stores the token that is given from Spotify
@@ -155,7 +155,7 @@ function App() {
         {listOfMergePlaylist ? listOfMergePlaylist.map((name, i) => 
           <h2 className='text-white text-4xl px-5 py-10 border-b-2'>{i+1}. {name}</h2>
         ) : null}
-      </div>
+      </div> 
     )
   }
 
