@@ -9,9 +9,9 @@ Let's be honest... Spotify's UI is sucks when it comes to effectively editing yo
 
 ![capture1](ss1.PNG)
 
-![capture2](ss2.PNG)
+![capture2](sc2.PNG)
 
-![caputure3](ss3.PNG)
+![caputure3](sc3.PNG)
 
 
 
