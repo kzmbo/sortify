@@ -3,7 +3,7 @@
 #### Try it out!: https://spotcleaner.netlify.app/
 #### DevPost Link: https://devpost.com/software/spotcleaning
 
-Let's be honest... Spotify's UI is sucks when it comes to effectively editing your playlists. Organizing your music has forever been an infuriating task.Your solution? Tidy up, use SpotCleaner.
+Let's be honest... Spotify's UI sucks when it comes to effectively editing your playlists. Organizing your music has forever been an infuriating task.Your solution? Tidy up, use SpotCleaner.
 
 ### Screenshots: 
 
